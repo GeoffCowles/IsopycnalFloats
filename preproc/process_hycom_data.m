@@ -14,13 +14,13 @@ ncks = '/opt/local/bin/ncks ';
 
 % hycom experiment location online
 %locale = ' ''http://ncss.hycom.org/thredds/ncss/GLBu0.08/expt_91.1?';
-locale = ' ''http://ncss.hycom.org/thredds/ncss/GLBv0.08/expt_56.3?';
+locale = ' ''http://ncss.hycom.org/thredds/ncss/GLBv0.08/expt_56.3?'; %2016s
 
 % variables to include
 vars = 'var=surf_el,water_u,water_v,water_temp,salinity';
 
 % output prefix
-prefix = 'GOM';
+prefix = 'OXY';
 
 % output directory location
 %outdir = '/Volumes/FastDrive/ONR_MUST_LatMix_DATA/OceanParcelsSet';
@@ -28,7 +28,11 @@ outdir = '../hycom_data';
 
 % lon/lat bounding box
 %bbox = '&north=25&south=5&west=-120&east=-100';
-bbox = '&north=43.5&south=43&west=-70&east=-69';
+%bbox = '&north=43.5&south=43&west=-70&east=-69';
+bbox = '&north=30&south=0&west=-120&east=-80';  %low-oxygen bbox
+
+% horizontal stride
+stride = '&horizStride=3';
 
 % hour string 
 %hrs = ['00';'03';'06';'09';'12';'15';'18';'21'];  %uncomment to have every frame in a different
@@ -57,11 +61,9 @@ for d=d1:dskip:d2  % loop over days
         %ofile = [datestr(d,'yyyymmdd') hrs(h,:) '0000' ];
         output = [outdir '/' prefix '_'   datestr(d,'yyyymmdd') hrs(h,:) '0000.nc'];
         if(exist(output,'file')); delete(output); end
-        cmd = [ wget  locale vars bbox time extra ' -O '  output];
-      
+        cmd = [ wget  locale vars bbox stride time extra ' -O '  output];
         % execute wget
         system(cmd);
-        ctmp = cmd;
         
         % check time
         time = ncread(output,'time');
